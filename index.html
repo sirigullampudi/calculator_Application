@@ -3,26 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Calculator | Professional Neon Design</title>
+
+    <title>Simple Calculator</title>
+
     <style>
-        /* ======================== RESET & BASE ======================== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
             width: 100%;
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+
             background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0f1829 100%);
+
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow: hidden;
-            position: relative;
         }
+
 
         /* Animated background grid */
         body::before {
@@ -180,6 +186,50 @@
         .btn {
             padding: 16px 12px;
             font-size: 18px;
+
+        .calculator {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 320px;
+        }
+        .title {
+            text-align: center;
+            color: #333;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .display {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 24px;
+            font-weight: 600;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: right;
+            margin-bottom: 20px;
+            min-height: 60px;
+            word-wrap: break-word;
+            word-break: break-all;
+            line-height: 1.5;
+            max-height: 100px;
+            overflow-y: auto;
+        }
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        button {
+            padding: 20px;
+            font-size: 20px;
+
             font-weight: 600;
             border: none;
             border-radius: 10px;
@@ -370,10 +420,74 @@
             <!-- Bottom row -->
             <button class="btn number" data-number="0">0</button>
             <button class="btn equals" data-action="equals">=</button>
+=======
+            transition: all 0.3s ease;
+            background: #f0f0f0;
+            color: #333;
+        }
+        button:hover {
+            background: #e0e0e0;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        .operator {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .operator:hover {
+            background: linear-gradient(135deg, #5a6fd8 0%, #6a3f95 100%);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .equals {
+            grid-column: span 2;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+        .equals:hover {
+            background: linear-gradient(135deg, #e88aea 0%, #f0475b 100%);
+            box-shadow: 0 5px 15px rgba(245, 87, 108, 0.4);
+        }
+        .clear {
+            grid-column: span 2;
+            background: #ff6b6b;
+            color: white;
+        }
+        .clear:hover {
+            background: #ee5a52;
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div class="title">Simple Calculator</div>
+        <div class="display" id="display">0</div>
+        <div class="buttons">
+            <button class="clear" onclick="calculator.clear()">Clear</button>
+            <button class="operator" onclick="calculator.del()">DEL</button>
+            <button class="operator" onclick="calculator.appendOperator('/')">/</button>
+            <button onclick="calculator.appendNumber('7')">7</button>
+            <button onclick="calculator.appendNumber('8')">8</button>
+            <button onclick="calculator.appendNumber('9')">9</button>
+            <button class="operator" onclick="calculator.appendOperator('*')">×</button>
+            <button onclick="calculator.appendNumber('4')">4</button>
+            <button onclick="calculator.appendNumber('5')">5</button>
+            <button onclick="calculator.appendNumber('6')">6</button>
+            <button class="operator" onclick="calculator.appendOperator('-')">−</button>
+            <button onclick="calculator.appendNumber('1')">1</button>
+            <button onclick="calculator.appendNumber('2')">2</button>
+            <button onclick="calculator.appendNumber('3')">3</button>
+            <button class="operator" onclick="calculator.appendOperator('+')">+</button>
+            <button onclick="calculator.appendNumber('0')">0</button>
+            <button onclick="calculator.appendDecimal('.')">.</button>
+            <button class="equals" onclick="calculator.calculate()">=</button>
         </div>
     </div>
-
     <script>
+
         // ======================== CALCULATOR LOGIC ========================
         class NeonCalculator {
             constructor() {
@@ -538,42 +652,40 @@
                     this.addDecimal();
                 } else if (action === 'equals') {
                     this.calculate();
+        const calculator = {
+            expression: '',
+            display: document.getElementById('display'),
+            appendNumber(num) {
+                this.expression += num;
+                this.updateDisplay();
+            },
+            appendOperator(op) {
+                if (this.expression === '') return;
+                const lastChar = this.expression[this.expression.length - 1];
+                if (['+', '-', '×', '/', '*'].includes(lastChar)) return;
+                this.expression += op;
+                this.updateDisplay();
+            },
+            appendDecimal(dot) {
+                if (this.expression === '') {
+                    this.expression = '0.';
+                } else if (!this.expression.endsWith('.')) {
+                    this.expression += dot;
                 }
                 this.updateDisplay();
-            }
-
-            // ======================== DECIMAL HANDLING ========================
-            addDecimal() {
-                if (this.shouldResetDisplay) {
-                    this.currentValue = '0.';
-                    this.shouldResetDisplay = false;
-                } else if (!this.currentValue.includes('.')) {
-                    this.currentValue += '.';
-                }
-            }
-
-            // ======================== CALCULATION ========================
+            },
             calculate() {
-                if (this.operator === null || this.previousValue === null) return;
-
-                const prev = parseFloat(this.previousValue);
-                const current = parseFloat(this.currentValue);
-                let result = 0;
-
-                switch (this.operator) {
-                    case '+':
-                        result = prev + current;
-                        break;
-                    case '-':
-                        result = prev - current;
-                        break;
-                    case '*':
-                        result = prev * current;
-                        break;
-                    case '/':
-                        result = current !== 0 ? prev / current : 0;
-                        break;
-                }
+                if (this.expression === '') return;
+                try {
+                    const result = eval(this.expression.replace(/×/g, '*').replace(/−/g, '-'));
+                    this.expression = result.toString();
+                    this.updateDisplay();
+                } catch (e) {
+                    this.display.textContent = 'Error';
+                    setTimeout(() => {
+                        this.clear();
+                    }, 1500);
+              
 
                 // Format result
                 this.currentValue = result.toString();
@@ -625,13 +737,24 @@
                 setTimeout(() => {
                     this.displayContainer.classList.remove('active');
                 }, 200);
-            }
-        }
 
-        // Initialize calculator on page load
-        window.addEventListener('DOMContentLoaded', () => {
-            new NeonCalculator();
-        });
+            },
+            clear() {
+                this.expression = '';
+                this.display.textContent = '0';
+            },
+            del() {
+                this.expression = this.expression.slice(0, -1);
+                this.updateDisplay();
+            },
+            updateDisplay() {
+                if (this.expression === '') {
+                    this.display.textContent = '0';
+                } else {
+                    this.display.textContent = this.expression;
+                }
+            }
+        };
     </script>
 </body>
 </html>
